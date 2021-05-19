@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/clambin/solaredge-exporter/internal/exporter"
 	"github.com/clambin/solaredge-exporter/internal/version"
+	"github.com/clambin/solaredge-exporter/pkg/solaredge"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -50,7 +51,8 @@ func main() {
 	log.WithField("version", version.BuildVersion).Info("solaredge-exporter started")
 
 	go func() {
-		err := exporter.Run(APIKey, Interval)
+		client := solaredge.NewClient(APIKey, nil)
+		err := exporter.Run(client, Interval)
 		if err != nil {
 			log.WithError(err).Fatal("exporter failed. aborting ...")
 		}

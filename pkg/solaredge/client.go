@@ -7,11 +7,18 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 type Client struct {
 	Token      string
 	HTTPClient *http.Client
+}
+
+type API interface {
+	GetSiteIDs() ([]int, error)
+	GetPower(int, time.Time, time.Time) ([]PowerMeasurement, error)
+	GetPowerOverview(int) (float64, float64, float64, float64, float64, error)
 }
 
 func NewClient(token string, httpClient *http.Client) *Client {
@@ -35,10 +42,9 @@ func (client *Client) call(endpoint string, args url.Values, response interface{
 	fullURL := apiURL + endpoint + "?" + args.Encode()
 
 	req, _ := http.NewRequest(http.MethodGet, fullURL, nil)
-	httpClient := &http.Client{}
 	var resp *http.Response
 
-	if resp, err = httpClient.Do(req); err == nil {
+	if resp, err = client.HTTPClient.Do(req); err == nil {
 		defer func(body io.ReadCloser) {
 			_ = body.Close()
 		}(resp.Body)

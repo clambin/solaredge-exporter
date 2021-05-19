@@ -62,7 +62,6 @@ func (client *Client) GetPower(siteID int, startTime, endTime time.Time) (entrie
 func (client *Client) GetPowerOverview(siteID int) (lifeTime, lastYear, lastMonth, lastDay, current float64, err error) {
 	args := url.Values{}
 
-	// {"overview":{"lastUpdateTime":"2021-05-19 09:29:37","lifeTimeData":{"energy":2.0093932E7},"lastYearData":{"energy":1965423.0},"lastMonthData":{"energy":355292.0},"lastDayData":{"energy":2508.0},"currentPower":{"power":881.15265},"measuredBy":"INVERTER"}}
 	var overviewResponse struct {
 		Overview struct {
 			LastUpdateTime TimeStamp
