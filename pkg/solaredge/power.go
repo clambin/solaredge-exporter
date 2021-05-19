@@ -62,34 +62,37 @@ func (client *Client) GetPower(siteID int, startTime, endTime time.Time) (entrie
 func (client *Client) GetPowerOverview(siteID int) (lifeTime, lastYear, lastMonth, lastDay, current float64, err error) {
 	args := url.Values{}
 
-	var overview struct {
-		LastUpdateTime TimeStamp
-		LifeTimeData   struct {
-			Energy float64
+	// {"overview":{"lastUpdateTime":"2021-05-19 09:29:37","lifeTimeData":{"energy":2.0093932E7},"lastYearData":{"energy":1965423.0},"lastMonthData":{"energy":355292.0},"lastDayData":{"energy":2508.0},"currentPower":{"power":881.15265},"measuredBy":"INVERTER"}}
+	var overviewResponse struct {
+		Overview struct {
+			LastUpdateTime TimeStamp
+			LifeTimeData   struct {
+				Energy float64
+			}
+			LastYearData struct {
+				Energy float64
+			}
+			LastMonthData struct {
+				Energy float64
+			}
+			LastDayData struct {
+				Energy float64
+			}
+			CurrentPower struct {
+				Power float64
+			}
+			MeasuredBy string
 		}
-		LastYearData struct {
-			Energy float64
-		}
-		LastMonthData struct {
-			Energy float64
-		}
-		LastDayData struct {
-			Energy float64
-		}
-		CurrentPower struct {
-			Power float64
-		}
-		MeasuredBy string
 	}
 
-	err = client.call("/site/"+strconv.Itoa(siteID)+"/overview", args, &overview)
+	err = client.call("/site/"+strconv.Itoa(siteID)+"/overview", args, &overviewResponse)
 
 	if err == nil {
-		lifeTime = overview.LifeTimeData.Energy
-		lastYear = overview.LastYearData.Energy
-		lastMonth = overview.LastMonthData.Energy
-		lastDay = overview.LastDayData.Energy
-		current = overview.CurrentPower.Power
+		lifeTime = overviewResponse.Overview.LifeTimeData.Energy
+		lastYear = overviewResponse.Overview.LastYearData.Energy
+		lastMonth = overviewResponse.Overview.LastMonthData.Energy
+		lastDay = overviewResponse.Overview.LastDayData.Energy
+		current = overviewResponse.Overview.CurrentPower.Power
 	}
 	return
 }
