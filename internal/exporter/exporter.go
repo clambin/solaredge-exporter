@@ -1,7 +1,7 @@
 package exporter
 
 import (
-	"github.com/clambin/solaredge-exporter/pkg/solaredge"
+	"github.com/clambin/solaredge"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 	"time"

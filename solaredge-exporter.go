@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/internal/exporter"
 	"github.com/clambin/solaredge-exporter/internal/version"
-	"github.com/clambin/solaredge-exporter/pkg/solaredge"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"

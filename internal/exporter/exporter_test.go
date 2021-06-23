@@ -2,8 +2,8 @@ package exporter_test
 
 import (
 	"github.com/clambin/gotools/metrics"
+	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/internal/exporter"
-	"github.com/clambin/solaredge-exporter/pkg/solaredge"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
