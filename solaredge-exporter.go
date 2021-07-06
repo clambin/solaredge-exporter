@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/internal/exporter"
@@ -50,9 +51,13 @@ func main() {
 
 	log.WithField("version", version.BuildVersion).Info("solaredge-exporter started")
 
+	client := solaredge.NewClient(APIKey, nil)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	go func() {
-		client := solaredge.NewClient(APIKey, nil)
-		err := exporter.Run(client, Interval)
+		err := exporter.Run(ctx, client, Interval)
 		if err != nil {
 			log.WithError(err).Fatal("exporter failed. aborting ...")
 		}
@@ -63,4 +68,6 @@ func main() {
 	http.Handle("/metrics", promhttp.Handler())
 	err := http.ListenAndServe(listenAddress, nil)
 	log.WithError(err).Fatal("Failed to start Prometheus http handler")
+
+	log.WithField("version", version.BuildVersion).Info("solaredge-exporter stopped")
 }
