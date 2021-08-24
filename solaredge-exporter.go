@@ -1,11 +1,10 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"github.com/clambin/solaredge"
-	"github.com/clambin/solaredge-exporter/internal/exporter"
-	"github.com/clambin/solaredge-exporter/internal/version"
+	"github.com/clambin/solaredge-exporter/collector"
+	"github.com/clambin/solaredge-exporter/version"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -51,17 +50,8 @@ func main() {
 
 	log.WithField("version", version.BuildVersion).Info("solaredge-exporter started")
 
-	client := solaredge.NewClient(APIKey, nil)
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	go func() {
-		err := exporter.Run(ctx, client, Interval)
-		if err != nil {
-			log.WithError(err).Fatal("exporter failed. aborting ...")
-		}
-	}()
+	coll := collector.New(APIKey)
+	prometheus.MustRegister(coll)
 
 	// Run initialized & runs the metrics
 	listenAddress := fmt.Sprintf(":%d", Port)

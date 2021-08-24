@@ -17,6 +17,8 @@ github.com/clambin/gotools v0.3.0 h1:Ub6nxfHmQkIJQLgQCL6Gfb8gXiWi+Va/635tRVAH9ms
 github.com/clambin/gotools v0.3.0/go.mod h1:12mW+UZTyh4Mag+p6mhI2rrw9Sax/wTZjouU7WrLyuQ=
 github.com/clambin/solaredge v0.3.2 h1:0A/1IxrgDsIQJLA143NpusAHLE3LT8GXcCnzZTO3ks8=
 github.com/clambin/solaredge v0.3.2/go.mod h1:Lw57P9Wnw9BASebS/NIw27k9H1yL36j6+M4lZJE57Ec=
+github.com/clambin/solaredge v0.3.3 h1:ye5aG5ONhQkTiDZEqU6Q/Xsc0RFWnZcIKVYKS6O8r4k=
+github.com/clambin/solaredge v0.3.3/go.mod h1:Lw57P9Wnw9BASebS/NIw27k9H1yL36j6+M4lZJE57Ec=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -97,6 +99,7 @@ github.com/sirupsen/logrus v1.6.0/go.mod h1:7uNnSEd1DgxDLC74fIahvMZmmYsHGZGEOFrf
 github.com/sirupsen/logrus v1.8.1 h1:dJKuHgqk1NNQlqoA6BTlM1Wf9DOH3NBjQyu0h9+AZZE=
 github.com/sirupsen/logrus v1.8.1/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
+github.com/stretchr/objx v0.1.1 h1:2vfRuCMp5sSVIDSqO8oNnWJq7mPa6KVP3iPIwFBuy8A=
 github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
