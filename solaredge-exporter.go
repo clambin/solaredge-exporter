@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"github.com/clambin/gotools/metrics"
 	"github.com/clambin/solaredge-exporter/collector"
 	"github.com/clambin/solaredge-exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"net/http"
@@ -54,10 +53,10 @@ func main() {
 	prometheus.MustRegister(coll)
 
 	// Run initialized & runs the metrics
-	listenAddress := fmt.Sprintf(":%d", Port)
-	http.Handle("/metrics", promhttp.Handler())
-	err := http.ListenAndServe(listenAddress, nil)
-	log.WithError(err).Fatal("Failed to start Prometheus http handler")
+	err := metrics.NewServer(Port).Run()
+	if err != http.ErrServerClosed {
+		log.WithError(err).Fatal("Failed to start Prometheus http handler")
+	}
 
 	log.WithField("version", version.BuildVersion).Info("solaredge-exporter stopped")
 }
