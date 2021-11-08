@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	io_prometheus_client "github.com/prometheus/client_model/go"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -51,8 +52,8 @@ func main() {
 		log.Fatal(err)
 	}
 }
-func Main() error {
-	if err := parseOptions(); err != nil {
+func Main() (err error) {
+	if err = parseOptions(); err != nil {
 		return err
 	}
 
@@ -61,18 +62,19 @@ func Main() error {
 	coll := collector.New(APIKey)
 	prometheus.MustRegister(coll)
 
-	mfs, err := prometheus.DefaultGatherer.Gather()
+	var mfs []*io_prometheus_client.MetricFamily
+	mfs, err = prometheus.DefaultGatherer.Gather()
 	if err != nil {
 		return err
 	}
 	for _, mf := range mfs {
-		if _, err := expfmt.MetricFamilyToText(log.StandardLogger().WriterLevel(log.DebugLevel), mf); err != nil {
+		if _, err = expfmt.MetricFamilyToText(log.StandardLogger().WriterLevel(log.DebugLevel), mf); err != nil {
 			return err
 		}
 	}
 	// Run initialized & runs the metrics
-	if err := metrics.NewServer(Port).Run(); !errors.Is(err, http.ErrServerClosed) {
-		return fmt.Errorf("Failed to start Prometheus http handler: %w", err)
+	if err = metrics.NewServer(Port).Run(); !errors.Is(err, http.ErrServerClosed) {
+		return fmt.Errorf("failed to start Prometheus http handler: %w", err)
 	}
 
 	log.WithField("version", version.BuildVersion).Info("solaredge-exporter stopped")
