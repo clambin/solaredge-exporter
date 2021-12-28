@@ -3,7 +3,7 @@ module github.com/clambin/solaredge-exporter
 go 1.17
 
 require (
-	github.com/clambin/gotools v0.5.3
+	github.com/clambin/gotools v0.5.4
 	github.com/clambin/solaredge v0.4.0
 	github.com/prometheus/client_golang v1.11.0
 	github.com/prometheus/client_model v0.2.0
