@@ -2,6 +2,7 @@ package collector
 
 import (
 	"context"
+	"fmt"
 	"github.com/clambin/solaredge"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
@@ -48,6 +49,10 @@ func (collector *Collector) Collect(ch chan<- prometheus.Metric) {
 	}
 
 	if err != nil {
-		log.WithError(err).Warning("failed to retrieve Solaredge metrics")
+		ch <- prometheus.NewInvalidMetric(
+			prometheus.NewDesc("solaredge_error",
+				"Error while retrieving SolarEdge metrics", nil, nil),
+			fmt.Errorf("error retrieving SolarEdge metrics: %w", err))
+		log.WithError(err).Warning("failed to retrieve SolarEdge metrics")
 	}
 }

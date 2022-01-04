@@ -1,6 +1,8 @@
 package collector_test
 
 import (
+	"fmt"
+	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/collector"
 	"github.com/clambin/solaredge/mocks"
 	"github.com/prometheus/client_golang/prometheus"
@@ -8,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"net/http"
 	"testing"
 )
 
@@ -40,5 +43,26 @@ func TestCollector_Collect(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, 3400.0, readMetric.GetGauge().GetValue())
 
+	mockAPI.AssertExpectations(t)
+}
+
+func TestCollector_Collect_Failure(t *testing.T) {
+	c := collector.New("sometoken")
+	mockAPI := &mocks.API{}
+	c.API = mockAPI
+
+	mockAPI.On("GetSiteIDs", mock.Anything).Return(nil, fmt.Errorf("get failed: %w", &solaredge.HTTPError{
+		StatusCode: http.StatusForbidden,
+		Status:     "403 Forbidden",
+	}))
+
+	ch := make(chan prometheus.Metric)
+	go c.Collect(ch)
+
+	m := <-ch
+	readMetric := pcg.Metric{}
+	err := m.Write(&readMetric)
+	require.Error(t, err)
+	assert.Equal(t, "error retrieving SolarEdge metrics: get failed: 403 Forbidden", err.Error())
 	mockAPI.AssertExpectations(t)
 }
