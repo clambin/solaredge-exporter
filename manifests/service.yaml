@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: solaredge-exporter
+  labels:
+    app: solaredge-exporter
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  selector:
+    app: solaredge-exporter
+  ports:
+    - port: 8080
+      targetPort: 8080

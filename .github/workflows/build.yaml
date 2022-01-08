@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - master
+    - okteto
 
 jobs:
   test:
