@@ -3,19 +3,18 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/clambin/go-metrics"
+	"github.com/clambin/solaredge-exporter/collector"
+	"github.com/clambin/solaredge-exporter/version"
+	"github.com/prometheus/client_golang/prometheus"
 	io_prometheus_client "github.com/prometheus/client_model/go"
+	"github.com/prometheus/common/expfmt"
+	log "github.com/sirupsen/logrus"
+	"gopkg.in/alecthomas/kingpin.v2"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
-
-	"github.com/clambin/gotools/metrics"
-	"github.com/clambin/solaredge-exporter/collector"
-	"github.com/clambin/solaredge-exporter/version"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/common/expfmt"
-	log "github.com/sirupsen/logrus"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 var (
