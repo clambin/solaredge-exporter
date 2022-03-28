@@ -13,6 +13,9 @@ import (
 type Collector struct {
 	solaredge.API
 	currentPower *prometheus.Desc
+	dayEnergy    *prometheus.Desc
+	monthEnergy  *prometheus.Desc
+	yearEnergy   *prometheus.Desc
 }
 
 func New(token string) *Collector {
@@ -27,24 +30,47 @@ func New(token string) *Collector {
 			"Current Power in Watt",
 			[]string{"site"},
 			nil,
-		)}
+		),
+		dayEnergy: prometheus.NewDesc(
+			prometheus.BuildFQName("solaredge", "", "day_energy"),
+			"Today's produced energy in WattHours",
+			[]string{"site"},
+			nil,
+		),
+		monthEnergy: prometheus.NewDesc(
+			prometheus.BuildFQName("solaredge", "", "month_energy"),
+			"This month's produced energy in WattHours",
+			[]string{"site"},
+			nil,
+		),
+		yearEnergy: prometheus.NewDesc(
+			prometheus.BuildFQName("solaredge", "", "year_energy"),
+			"This year's produced energy in WattHours",
+			[]string{"site"},
+			nil,
+		),
+	}
 }
 
-func (collector *Collector) Describe(ch chan<- *prometheus.Desc) {
-	ch <- collector.currentPower
+func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
+	ch <- c.currentPower
 }
 
-func (collector *Collector) Collect(ch chan<- prometheus.Metric) {
+func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	ctx := context.Background()
-	sites, err := collector.GetSiteIDs(ctx)
+	sites, err := c.GetSiteIDs(ctx)
 
 	if err == nil {
+		var year, month, day, current float64
 		for _, site := range sites {
-			var current float64
-			_, _, _, _, current, err = collector.GetPowerOverview(ctx, site)
-			if err == nil {
-				ch <- prometheus.MustNewConstMetric(collector.currentPower, prometheus.GaugeValue, current, strconv.Itoa(site))
+			_, year, month, day, current, err = c.GetPowerOverview(ctx, site)
+			if err != nil {
+				break
 			}
+			ch <- prometheus.MustNewConstMetric(c.currentPower, prometheus.GaugeValue, current, strconv.Itoa(site))
+			ch <- prometheus.MustNewConstMetric(c.dayEnergy, prometheus.GaugeValue, day, strconv.Itoa(site))
+			ch <- prometheus.MustNewConstMetric(c.monthEnergy, prometheus.GaugeValue, month, strconv.Itoa(site))
+			ch <- prometheus.MustNewConstMetric(c.yearEnergy, prometheus.GaugeValue, year, strconv.Itoa(site))
 		}
 	}
 
