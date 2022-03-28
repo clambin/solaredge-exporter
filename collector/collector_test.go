@@ -32,16 +32,18 @@ func TestCollector_Collect(t *testing.T) {
 	c.API = mockAPI
 
 	mockAPI.On("GetSiteIDs", mock.Anything).Return([]int{123}, nil)
-	mockAPI.On("GetPowerOverview", mock.Anything, 123).Return(0.0, 0.0, 0.0, 0.0, 3400.0, nil)
+	mockAPI.On("GetPowerOverview", mock.Anything, 123).Return(0.0, 1000.0, 100.0, 10.0, 3400.0, nil)
 
 	ch := make(chan prometheus.Metric)
 	go c.Collect(ch)
 
-	m := <-ch
-	readMetric := pcg.Metric{}
-	err := m.Write(&readMetric)
-	require.NoError(t, err)
-	assert.Equal(t, 3400.0, readMetric.GetGauge().GetValue())
+	for _, expected := range []float64{3400, 10, 100, 1000} {
+		m := <-ch
+		readMetric := pcg.Metric{}
+		err := m.Write(&readMetric)
+		require.NoError(t, err)
+		assert.Equal(t, expected, readMetric.GetGauge().GetValue())
+	}
 
 	mockAPI.AssertExpectations(t)
 }
