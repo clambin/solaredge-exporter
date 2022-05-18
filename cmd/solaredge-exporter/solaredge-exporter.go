@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/clambin/go-metrics"
+	"github.com/clambin/go-metrics/server"
 	"github.com/clambin/solaredge-exporter/collector"
 	"github.com/clambin/solaredge-exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
@@ -72,7 +72,7 @@ func Main() (err error) {
 		}
 	}
 	// Run initialized & runs the metrics
-	if err = metrics.NewServer(Port).Run(); !errors.Is(err, http.ErrServerClosed) {
+	if err = server.New(Port).Run(); !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("failed to start Prometheus http handler: %w", err)
 	}
 
