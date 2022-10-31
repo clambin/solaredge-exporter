@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/clambin/go-metrics v0.6.3
-	github.com/clambin/solaredge v0.6.0
+	github.com/clambin/solaredge v0.7.0
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prometheus/client_model v0.3.0
 	github.com/prometheus/common v0.37.0
