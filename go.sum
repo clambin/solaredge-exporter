@@ -54,8 +54,8 @@ github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5P
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
 github.com/clambin/go-metrics v0.6.3 h1:awuonTV7BCr0xYoVVkuS1W0HQblzZ/1AiIj9RUO1Ruk=
 github.com/clambin/go-metrics v0.6.3/go.mod h1:6XBV5IpnL9N4xGV50i6eo7AB5mPcLb7XUtTtv3wD7qE=
-github.com/clambin/solaredge v0.6.0 h1:2a2E4LrnWIUVWQjMHIU+j0AKeT7fFUAi6DtoEybjon0=
-github.com/clambin/solaredge v0.6.0/go.mod h1:Lr4O8/wnpWV/FdZkDbCTd4/KGqLo390O5Fk6bUiSB9A=
+github.com/clambin/solaredge v0.7.0 h1:p1KA9MAmXyWBHcVnTDfW7fUjvjwBV+gFGcbZ3RZJksc=
+github.com/clambin/solaredge v0.7.0/go.mod h1:4jXmvZWyocXo/lk9rjJx71UsYnjeY/QNjjlR1uCD5UQ=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
