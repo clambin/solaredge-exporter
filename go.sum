@@ -52,8 +52,8 @@ github.com/cespare/xxhash/v2 v2.1.2/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XL
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
-github.com/clambin/go-metrics v0.6.3 h1:awuonTV7BCr0xYoVVkuS1W0HQblzZ/1AiIj9RUO1Ruk=
-github.com/clambin/go-metrics v0.6.3/go.mod h1:6XBV5IpnL9N4xGV50i6eo7AB5mPcLb7XUtTtv3wD7qE=
+github.com/clambin/httpserver v0.4.0 h1:YyhtOCIIWPrJ0a0N2lPceAxoLAPyz34kghrJ9cuY86M=
+github.com/clambin/httpserver v0.4.0/go.mod h1:QfashUAIoGpaUtNMUIv4JBLk+4V3v/pEJc0dpc6KpZ8=
 github.com/clambin/solaredge v0.7.0 h1:p1KA9MAmXyWBHcVnTDfW7fUjvjwBV+gFGcbZ3RZJksc=
 github.com/clambin/solaredge v0.7.0/go.mod h1:4jXmvZWyocXo/lk9rjJx71UsYnjeY/QNjjlR1uCD5UQ=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=

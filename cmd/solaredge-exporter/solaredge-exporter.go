@@ -1,17 +1,13 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"github.com/clambin/go-metrics/server"
+	"github.com/clambin/httpserver"
 	"github.com/clambin/solaredge-exporter/collector"
 	"github.com/clambin/solaredge-exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
-	io_prometheus_client "github.com/prometheus/client_model/go"
-	"github.com/prometheus/common/expfmt"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
-	"net/http"
 	"os"
 	"path/filepath"
 	"time"
@@ -61,19 +57,13 @@ func Main() (err error) {
 	coll := collector.New(APIKey)
 	prometheus.MustRegister(coll)
 
-	var mfs []*io_prometheus_client.MetricFamily
-	mfs, err = prometheus.DefaultGatherer.Gather()
-	if err != nil {
-		return err
-	}
-	for _, mf := range mfs {
-		if _, err = expfmt.MetricFamilyToText(log.StandardLogger().WriterLevel(log.DebugLevel), mf); err != nil {
-			return err
-		}
-	}
 	// Run initialized & runs the metrics
-	if err = server.New(Port).Run(); !errors.Is(err, http.ErrServerClosed) {
-		return fmt.Errorf("failed to start Prometheus http handler: %w", err)
+	var server *httpserver.Server
+	if server, err = httpserver.New(httpserver.WithPort{Port: Port}, httpserver.WithPrometheus{}); err == nil {
+		err = server.Run()
+	}
+	if err != nil {
+		return fmt.Errorf("failed to start Prometheus metrics server: %w", err)
 	}
 
 	log.WithField("version", version.BuildVersion).Info("solaredge-exporter stopped")
