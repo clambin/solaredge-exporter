@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/clambin/httpserver"
+	"github.com/clambin/go-common/httpserver"
 	"github.com/clambin/solaredge-exporter/collector"
 	"github.com/clambin/solaredge-exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
