@@ -54,6 +54,9 @@ func New(token string) *Collector {
 
 func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.currentPower
+	ch <- c.dayEnergy
+	ch <- c.monthEnergy
+	ch <- c.yearEnergy
 }
 
 func (c *Collector) Collect(ch chan<- prometheus.Metric) {

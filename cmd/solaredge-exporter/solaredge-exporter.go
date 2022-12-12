@@ -1,13 +1,15 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"github.com/clambin/go-common/httpserver"
 	"github.com/clambin/solaredge-exporter/collector"
 	"github.com/clambin/solaredge-exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/alecthomas/kingpin.v2"
+	"net/http"
 	"os"
 	"path/filepath"
 	"time"
@@ -20,7 +22,7 @@ var (
 	APIKey   string
 )
 
-func parseOptions() error {
+func parseOptions() {
 	a := kingpin.New(filepath.Base(os.Args[0]), "solaredge-exporter")
 
 	a.Version(version.BuildVersion)
@@ -33,13 +35,11 @@ func parseOptions() error {
 
 	if _, err := a.Parse(os.Args[1:]); err != nil {
 		a.Usage(os.Args[1:])
-		return err
 	}
 
 	if Debug {
 		log.SetLevel(log.DebugLevel)
 	}
-	return nil
 }
 
 func main() {
@@ -47,22 +47,18 @@ func main() {
 		log.Fatal(err)
 	}
 }
-func Main() (err error) {
-	if err = parseOptions(); err != nil {
-		return err
-	}
+func Main() error {
+	parseOptions()
 
 	log.WithField("version", version.BuildVersion).Info("solaredge-exporter started")
 
 	coll := collector.New(APIKey)
-	prometheus.MustRegister(coll)
-
-	// Run initialized & runs the metrics
-	var server *httpserver.Server
-	if server, err = httpserver.New(httpserver.WithPort{Port: Port}, httpserver.WithPrometheus{}); err == nil {
-		err = server.Run()
+	if err := prometheus.Register(coll); err != nil {
+		return fmt.Errorf("failed registered Prometheus metrics: %w", err)
 	}
-	if err != nil {
+
+	http.Handle("/metrics", promhttp.Handler())
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", Port), nil); !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("failed to start Prometheus metrics server: %w", err)
 	}
 
