@@ -12,14 +12,12 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"time"
 )
 
 var (
-	Port     int
-	Debug    bool
-	Interval time.Duration
-	APIKey   string
+	Port   int
+	Debug  bool
+	APIKey string
 )
 
 func main() {
@@ -57,7 +55,6 @@ func parseOptions() {
 	a.VersionFlag.Short('v')
 	a.Flag("debug", "Log debug messages").Short('d').BoolVar(&Debug)
 	a.Flag("port", "Prometheus listener port").Short('p').Default("8080").IntVar(&Port)
-	a.Flag("interval", "Measurement interval").Short('i').Default("15m").DurationVar(&Interval)
 	a.Flag("apikey", "SolarEdge API key").Short('a').Required().StringVar(&APIKey)
 
 	if _, err := a.Parse(os.Args[1:]); err != nil {
