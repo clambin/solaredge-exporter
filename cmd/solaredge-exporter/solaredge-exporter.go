@@ -7,7 +7,7 @@ import (
 	"github.com/clambin/solaredge-exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	log "github.com/sirupsen/logrus"
+	"golang.org/x/exp/slog"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"net/http"
 	"os"
@@ -22,6 +22,33 @@ var (
 	APIKey   string
 )
 
+func main() {
+	if err := Main(); err != nil {
+		slog.Error("failed to start", err)
+		return
+	}
+}
+
+func Main() error {
+	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stdout)))
+	parseOptions()
+
+	slog.Info("solaredge-exporter started", "version", version.BuildVersion)
+
+	coll := collector.New(APIKey)
+	if err := prometheus.Register(coll); err != nil {
+		return fmt.Errorf("failed register Prometheus metrics: %w", err)
+	}
+
+	http.Handle("/metrics", promhttp.Handler())
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", Port), nil); !errors.Is(err, http.ErrServerClosed) {
+		return fmt.Errorf("failed to start Prometheus metrics server: %w", err)
+	}
+
+	slog.Info("solaredge-exporter stopped")
+	return nil
+}
+
 func parseOptions() {
 	a := kingpin.New(filepath.Base(os.Args[0]), "solaredge-exporter")
 
@@ -35,33 +62,6 @@ func parseOptions() {
 
 	if _, err := a.Parse(os.Args[1:]); err != nil {
 		a.Usage(os.Args[1:])
+		os.Exit(1)
 	}
-
-	if Debug {
-		log.SetLevel(log.DebugLevel)
-	}
-}
-
-func main() {
-	if err := Main(); err != nil {
-		log.Fatal(err)
-	}
-}
-func Main() error {
-	parseOptions()
-
-	log.WithField("version", version.BuildVersion).Info("solaredge-exporter started")
-
-	coll := collector.New(APIKey)
-	if err := prometheus.Register(coll); err != nil {
-		return fmt.Errorf("failed registered Prometheus metrics: %w", err)
-	}
-
-	http.Handle("/metrics", promhttp.Handler())
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", Port), nil); !errors.Is(err, http.ErrServerClosed) {
-		return fmt.Errorf("failed to start Prometheus metrics server: %w", err)
-	}
-
-	log.WithField("version", version.BuildVersion).Info("solaredge-exporter stopped")
-	return nil
 }

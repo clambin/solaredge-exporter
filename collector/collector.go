@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/clambin/solaredge"
 	"github.com/prometheus/client_golang/prometheus"
-	log "github.com/sirupsen/logrus"
+	"golang.org/x/exp/slog"
 	"net/http"
 	"strconv"
 )
@@ -82,6 +82,6 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 			prometheus.NewDesc("solaredge_error",
 				"Error while retrieving SolarEdge metrics", nil, nil),
 			fmt.Errorf("error retrieving SolarEdge metrics: %w", err))
-		log.WithError(err).Warning("failed to retrieve SolarEdge metrics")
+		slog.Error("failed to retrieve SolarEdge metrics", err)
 	}
 }
