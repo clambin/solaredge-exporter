@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/collector"
-	"github.com/clambin/solaredge/mocks"
+	"github.com/clambin/solaredge-exporter/solaredge/mocks"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/testutil"
 	"github.com/stretchr/testify/assert"
@@ -19,8 +19,32 @@ func TestCollector_Collect(t *testing.T) {
 	mockAPI := mocks.NewAPI(t)
 	c.API = mockAPI
 
-	mockAPI.On("GetSiteIDs", mock.Anything).Return([]int{123}, nil)
-	mockAPI.On("GetPowerOverview", mock.Anything, 123).Return(0.0, 1000.0, 100.0, 10.0, 3400.0, nil)
+	mockAPI.On("GetSites", mock.Anything).Return([]solaredge.Site{{ID: 123}}, nil)
+	mockAPI.On("SetActiveSiteID", 123)
+	mockAPI.On("GetPowerOverview", mock.Anything).Return(
+		solaredge.PowerOverview{
+			LastYearData: struct {
+				Energy  float64 `json:"energy"`
+				Revenue float64 `json:"revenue"`
+			}{
+				Energy: 1000,
+			},
+			LastMonthData: struct {
+				Energy  float64 `json:"energy"`
+				Revenue float64 `json:"revenue"`
+			}{
+				Energy: 100,
+			},
+			LastDayData: struct {
+				Energy  float64 `json:"energy"`
+				Revenue float64 `json:"revenue"`
+			}{
+				Energy: 10,
+			},
+			CurrentPower: struct {
+				Power float64 `json:"power"`
+			}(struct{ Power float64 }{Power: 3400}),
+		}, nil)
 
 	r := prometheus.NewPedanticRegistry()
 	r.MustRegister(c)
@@ -46,7 +70,7 @@ func TestCollector_Collect_Failure(t *testing.T) {
 	mockAPI := mocks.NewAPI(t)
 	c.API = mockAPI
 
-	mockAPI.On("GetSiteIDs", mock.Anything).Return(nil, fmt.Errorf("get failed: %w", &solaredge.HTTPError{
+	mockAPI.On("GetSites", mock.Anything).Return(nil, fmt.Errorf("get failed: %w", &solaredge.HTTPError{
 		StatusCode: http.StatusForbidden,
 		Status:     "403 Forbidden",
 	}))

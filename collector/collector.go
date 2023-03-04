@@ -4,14 +4,14 @@ import (
 	"context"
 	"fmt"
 	"github.com/clambin/solaredge"
+	solaredge2 "github.com/clambin/solaredge-exporter/solaredge"
 	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/exp/slog"
-	"net/http"
 	"strconv"
 )
 
 type Collector struct {
-	solaredge.API
+	solaredge2.API
 	currentPower *prometheus.Desc
 	dayEnergy    *prometheus.Desc
 	monthEnergy  *prometheus.Desc
@@ -21,9 +21,7 @@ type Collector struct {
 func New(token string) *Collector {
 	return &Collector{
 		API: &solaredge.Client{
-			Token:      token,
-			HTTPClient: &http.Client{},
-			APIURL:     "",
+			Token: token,
 		},
 		currentPower: prometheus.NewDesc(
 			prometheus.BuildFQName("solaredge", "", "current_power"),
@@ -61,19 +59,19 @@ func (c *Collector) Describe(ch chan<- *prometheus.Desc) {
 
 func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	ctx := context.Background()
-	sites, err := c.GetSiteIDs(ctx)
+	sites, err := c.GetSites(ctx)
 
 	if err == nil {
-		var year, month, day, current float64
 		for _, site := range sites {
-			_, year, month, day, current, err = c.GetPowerOverview(ctx, site)
-			if err != nil {
+			c.SetActiveSiteID(site.ID)
+			var overview solaredge.PowerOverview
+			if overview, err = c.GetPowerOverview(ctx); err != nil {
 				break
 			}
-			ch <- prometheus.MustNewConstMetric(c.currentPower, prometheus.GaugeValue, current, strconv.Itoa(site))
-			ch <- prometheus.MustNewConstMetric(c.dayEnergy, prometheus.GaugeValue, day, strconv.Itoa(site))
-			ch <- prometheus.MustNewConstMetric(c.monthEnergy, prometheus.GaugeValue, month, strconv.Itoa(site))
-			ch <- prometheus.MustNewConstMetric(c.yearEnergy, prometheus.GaugeValue, year, strconv.Itoa(site))
+			ch <- prometheus.MustNewConstMetric(c.currentPower, prometheus.GaugeValue, overview.CurrentPower.Power, strconv.Itoa(site.ID))
+			ch <- prometheus.MustNewConstMetric(c.dayEnergy, prometheus.GaugeValue, overview.LastDayData.Energy, strconv.Itoa(site.ID))
+			ch <- prometheus.MustNewConstMetric(c.monthEnergy, prometheus.GaugeValue, overview.LastMonthData.Energy, strconv.Itoa(site.ID))
+			ch <- prometheus.MustNewConstMetric(c.yearEnergy, prometheus.GaugeValue, overview.LastYearData.Energy, strconv.Itoa(site.ID))
 		}
 	}
 
