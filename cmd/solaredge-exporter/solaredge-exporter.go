@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/collector"
 	"github.com/clambin/solaredge-exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
@@ -31,10 +33,16 @@ func Main() error {
 	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stdout)))
 	parseOptions()
 
+	sites, err := getSites()
+	if err != nil {
+		slog.Error("failed to get SolarEdge sites", err)
+		return err
+	}
+
 	slog.Info("solaredge-exporter started", "version", version.BuildVersion)
 
-	coll := collector.New(APIKey)
-	if err := prometheus.Register(coll); err != nil {
+	coll := collector.Collector{Sites: sites}
+	if err := prometheus.Register(&coll); err != nil {
 		return fmt.Errorf("failed register Prometheus metrics: %w", err)
 	}
 
@@ -61,4 +69,23 @@ func parseOptions() {
 		a.Usage(os.Args[1:])
 		os.Exit(1)
 	}
+}
+
+func getSites() ([]collector.Site, error) {
+	c := solaredge.Client{
+		Token:      APIKey,
+		HTTPClient: http.DefaultClient,
+	}
+
+	sites, err := c.GetSites(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	var result []collector.Site
+	for _, site := range sites {
+		result = append(result, &site)
+	}
+
+	return result, nil
 }
