@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/clambin/go-common/httpclient"
 	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/collector"
 	"github.com/clambin/solaredge-exporter/version"
@@ -13,6 +14,7 @@ import (
 	"golang.org/x/exp/slog"
 	"net/http"
 	"os"
+	"time"
 )
 
 var (
@@ -62,8 +64,10 @@ func Main(_ *cobra.Command, _ []string) {
 
 func getSites() ([]collector.Site, error) {
 	c := solaredge.Client{
-		Token:      viper.GetString("apikey"),
-		HTTPClient: http.DefaultClient,
+		Token: viper.GetString("apikey"),
+		HTTPClient: &http.Client{Transport: httpclient.NewRoundTripper(httpclient.WithCache{
+			DefaultExpiry: 5 * time.Minute,
+		})},
 	}
 
 	sites, err := c.GetSites(context.Background())
