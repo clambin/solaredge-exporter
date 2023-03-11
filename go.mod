@@ -3,7 +3,7 @@ module github.com/clambin/solaredge-exporter
 go 1.19
 
 require (
-	github.com/clambin/solaredge v0.9.2
+	github.com/clambin/solaredge v1.0.0
 	github.com/prometheus/client_golang v1.14.0
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/exp v0.0.0-20230310171629-522b1b587ee0
