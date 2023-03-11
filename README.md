@@ -9,17 +9,7 @@ Basic Prometheus exporter for SolarEdge power inverters.
 
 ## Installation
 
-Binaries are available on the [release](https://github.com/clambin/solaredge-exporter/releases) page. Docker images are available on [docker hub](https://hub.docker.com/r/clambin/solaredge-monitor).
-
-Alternatively, you can clone the repository and build from source:
-
-```
-git clone https://github.com/clambin/solaredge-exporter.git
-cd solaredge-exporter
-go build
-```
-
-You will need to have Go 1.16 installed on your system.
+Binaries are available on the [release](https://github.com/clambin/solaredge-exporter/releases) page. Docker images are available on [ghcr.io](https://github.com/clambin/solaredge-exporter/pkgs/container/solaredge-exporter).
 
 ## Running
 ### Command-line options
@@ -27,27 +17,39 @@ You will need to have Go 1.16 installed on your system.
 The following command-line arguments can be passed:
 
 ```
-usage: solaredge-exporter --apikey=APIKEY [<flags>]
-
-solaredge-exporter
+Usage:
+  solaredge-exporter [flags]
 
 Flags:
-  -h, --help           Show context-sensitive help (also try --help-long and --help-man).
-  -v, --version        Show application version.
-  -d, --debug          Log debug messages
-  -p, --port=8080      Prometheus listener port
-  -i, --interval=15m   Measurement interval
-  -a, --apikey=APIKEY  SolarEdge API key
+      --addr string     Listener address for Prometheus metrics (default ":9090")
+      --apikey string   SolarEdge API key
+      --debug           Log debug messages
+  -h, --help            help for solaredge-exporter
+  -v, --version         version for solaredge-exporter
 ```
 
-where APIKEY is the API key you created on the Solaredge portal.
+where apikey is your SolarEdge API key.
 
 ## Prometheus metrics
 
-Currently, the exporter provides a single metric:
+Currently, the exporter provides the following metrics:
 
 ```
-* solaredge_current_power: current output, in Watt
+# HELP solaredge_current_power Current Power in Watt
+# TYPE solaredge_current_power gauge
+solaredge_current_power{site="527756"} 2477.321
+
+# HELP solaredge_day_energy Today's produced energy in WattHours
+# TYPE solaredge_day_energy gauge
+solaredge_day_energy{site="527756"} 18732
+
+# HELP solaredge_month_energy This month's produced energy in WattHours
+# TYPE solaredge_month_energy gauge
+solaredge_month_energy{site="527756"} 111563
+
+# HELP solaredge_year_energy This year's produced energy in WattHours
+# TYPE solaredge_year_energy gauge
+solaredge_year_energy{site="527756"} 523177
 ```
 
 ## Authors
