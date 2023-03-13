@@ -58,8 +58,8 @@ github.com/clambin/go-common/cache v0.1.1 h1:aX6v3sYaaQy8WIwP7II1UTyH2z7/cRfl40/
 github.com/clambin/go-common/cache v0.1.1/go.mod h1:7eT02BszXnBRDG0MIJ5penXQeEXRQRfmC0hNCmZqMCU=
 github.com/clambin/go-common/httpclient v0.3.3 h1:M3L3HsPH8Bb5m8NOIvIlhZ75Cg9Hx3DjHuXIxb6Z6PY=
 github.com/clambin/go-common/httpclient v0.3.3/go.mod h1:w0RUxYpmTu+TiWx4F+pfeYhOcKaHxI/Q9OrAlIaz3Lk=
-github.com/clambin/solaredge v1.0.0 h1:Nohb+kqqrfAdmj2pjQ9nRaC6hlSute2e8dKAjsJnKLA=
-github.com/clambin/solaredge v1.0.0/go.mod h1:vg9qD/N25lazxLVpmOfgdKYHl7T7JvQm5ViFktzEHt4=
+github.com/clambin/solaredge v1.0.1 h1:tG3vFXEJuMlvMVMKK8tDn4TfnHGJAc29PbnyCOVL94w=
+github.com/clambin/solaredge v1.0.1/go.mod h1:vg9qD/N25lazxLVpmOfgdKYHl7T7JvQm5ViFktzEHt4=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/cncf/udpa/go v0.0.0-20200629203442-efcf912fb354/go.mod h1:WmhPx2Nbnhtbo57+VJT5O0JRkEi1Wbu0z5j0R8u5Hbk=
