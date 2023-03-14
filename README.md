@@ -36,20 +36,40 @@ Currently, the exporter provides the following metrics:
 
 ```
 # HELP solaredge_current_power Current Power in Watt
-# TYPE solaredge_current_power gauge
-solaredge_current_power{site="527756"} 2477.321
+## TYPE solaredge_current_power gauge
+solaredge_current_power{site="1"} 3400
 
 # HELP solaredge_day_energy Today's produced energy in WattHours
 # TYPE solaredge_day_energy gauge
-solaredge_day_energy{site="527756"} 18732
+solaredge_day_energy{site="1"} 10
+
+# HELP solaredge_inverter_ac_current AC current reported by the inverter(s)
+# TYPE solaredge_inverter_ac_current gauge
+solaredge_inverter_ac_current{site="1"} 15
+
+# HELP solaredge_inverter_ac_voltage AC voltage reported by the inverter(s)
+# TYPE solaredge_inverter_ac_voltage gauge
+solaredge_inverter_ac_voltage{site="1"} 220
+
+# HELP solaredge_inverter_dc_voltage DC voltage reported by the inverter(s)
+# TYPE solaredge_inverter_dc_voltage gauge
+solaredge_inverter_dc_voltage{site="1"} 300
+
+# HELP solaredge_inverter_power_limit Power limit reported by the inverter(s)
+# TYPE solaredge_inverter_power_limit gauge
+solaredge_inverter_power_limit{site="1"} 100
+
+# HELP solaredge_inverter_temperature Temperature reported by the inverter(s)
+# TYPE solaredge_inverter_temperature gauge
+solaredge_inverter_temperature{site="1"} 25
 
 # HELP solaredge_month_energy This month's produced energy in WattHours
 # TYPE solaredge_month_energy gauge
-solaredge_month_energy{site="527756"} 111563
+solaredge_month_energy{site="1"} 100
 
 # HELP solaredge_year_energy This year's produced energy in WattHours
 # TYPE solaredge_year_energy gauge
-solaredge_year_energy{site="527756"} 523177
+solaredge_year_energy{site="1"} 1000
 ```
 
 ## Authors

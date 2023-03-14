@@ -28,6 +28,32 @@ func (_m *Site) GetID() int {
 	return r0
 }
 
+// GetInverters provides a mock function with given fields: ctx
+func (_m *Site) GetInverters(ctx context.Context) ([]solaredge.Inverter, error) {
+	ret := _m.Called(ctx)
+
+	var r0 []solaredge.Inverter
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]solaredge.Inverter, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []solaredge.Inverter); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]solaredge.Inverter)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetPowerOverview provides a mock function with given fields: ctx
 func (_m *Site) GetPowerOverview(ctx context.Context) (solaredge.PowerOverview, error) {
 	ret := _m.Called(ctx)

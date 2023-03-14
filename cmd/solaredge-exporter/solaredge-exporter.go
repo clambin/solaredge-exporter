@@ -45,9 +45,15 @@ func Main(_ *cobra.Command, _ []string) {
 		return
 	}
 
+	inverters, err := getInverters(sites)
+	if err != nil {
+		slog.Error("failed to get SolarEdge inverters", "err", err)
+		return
+	}
+
 	slog.Info("solaredge-exporter started", "version", version.BuildVersion)
 
-	coll := collector.Collector{Sites: sites}
+	coll := collector.Collector{Sites: sites, Inverters: inverters}
 	if err := prometheus.Register(&coll); err != nil {
 		slog.Error("failed register Prometheus metrics", "err", err)
 		return
@@ -81,6 +87,22 @@ func getSites() ([]collector.Site, error) {
 	}
 
 	return result, nil
+}
+
+func getInverters(sites []collector.Site) (map[int][]collector.Inverter, error) {
+	inverters := make(map[int][]collector.Inverter)
+	for _, site := range sites {
+		result, err := site.GetInverters(context.Background())
+		if err != nil {
+			return nil, err
+		}
+		invertersAtSite := make([]collector.Inverter, len(result))
+		for index := range result {
+			invertersAtSite[index] = collector.Inverter(&result[index])
+		}
+		inverters[site.GetID()] = invertersAtSite
+	}
+	return inverters, nil
 }
 
 func init() {
