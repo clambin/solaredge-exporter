@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/clambin/solaredge"
-	"github.com/clambin/solaredge-exporter/pkg/averager"
 	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/exp/slog"
 	"strconv"
@@ -102,13 +101,11 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	for _, site := range c.Sites {
 		c.collectPowerOverview(ctx, site, ch)
 
-		if c.Inverters == nil {
-			continue
-		}
-
-		if inverters, ok := c.Inverters[site.GetID()]; ok {
-			for _, inverter := range inverters {
-				c.collectInverterTelemetry(ctx, site.GetID(), inverter, ch)
+		if c.Inverters != nil {
+			if inverters, ok := c.Inverters[site.GetID()]; ok {
+				for _, inverter := range inverters {
+					c.collectInverterTelemetry(ctx, site.GetID(), inverter, ch)
+				}
 			}
 		}
 	}
@@ -138,7 +135,7 @@ func (c *Collector) collectPowerOverview(ctx context.Context, site Site, ch chan
 
 func (c *Collector) collectInverterTelemetry(ctx context.Context, siteID int, inverter Inverter, ch chan<- prometheus.Metric) {
 	end := time.Now()
-	start := end.Add(-15 * time.Minute)
+	start := end.Add(-10 * time.Minute)
 	telemetry, err := inverter.GetTelemetry(ctx, start, end)
 	if err != nil {
 		ch <- prometheus.NewInvalidMetric(
@@ -157,20 +154,14 @@ func (c *Collector) collectInverterTelemetry(ctx context.Context, siteID int, in
 		return
 	}
 
-	var t, v, a, d, l averager.Averager[float64]
-
-	for _, measurement := range telemetry {
-		t.Add(measurement.Temperature)
-		v.Add(measurement.L1Data.AcVoltage)
-		a.Add(measurement.L1Data.AcCurrent)
-		d.Add(measurement.DcVoltage)
-		l.Add(measurement.PowerLimit)
-	}
-
 	siteIDString := strconv.Itoa(siteID)
-	ch <- prometheus.MustNewConstMetric(temperature, prometheus.GaugeValue, t.Average(), siteIDString)
-	ch <- prometheus.MustNewConstMetric(acVoltage, prometheus.GaugeValue, v.Average(), siteIDString)
-	ch <- prometheus.MustNewConstMetric(acCurrent, prometheus.GaugeValue, a.Average(), siteIDString)
-	ch <- prometheus.MustNewConstMetric(dcVoltage, prometheus.GaugeValue, d.Average(), siteIDString)
-	ch <- prometheus.MustNewConstMetric(powerLimit, prometheus.GaugeValue, l.Average(), siteIDString)
+	measurement := telemetry[len(telemetry)-1]
+
+	slog.Debug("telemetry received", "count", len(telemetry), "newest", time.Since(time.Time(measurement.Time)))
+
+	ch <- prometheus.MustNewConstMetric(temperature, prometheus.GaugeValue, measurement.Temperature, siteIDString)
+	ch <- prometheus.MustNewConstMetric(acVoltage, prometheus.GaugeValue, measurement.L1Data.AcVoltage, siteIDString)
+	ch <- prometheus.MustNewConstMetric(acCurrent, prometheus.GaugeValue, measurement.L1Data.AcCurrent, siteIDString)
+	ch <- prometheus.MustNewConstMetric(dcVoltage, prometheus.GaugeValue, measurement.DcVoltage, siteIDString)
+	ch <- prometheus.MustNewConstMetric(powerLimit, prometheus.GaugeValue, measurement.PowerLimit, siteIDString)
 }

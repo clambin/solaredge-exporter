@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - telemetry
+      - debug
 
 jobs:
   test:

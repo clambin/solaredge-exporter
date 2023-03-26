@@ -65,7 +65,6 @@ func Main(_ *cobra.Command, _ []string) {
 	}
 
 	slog.Info("solaredge-exporter stopped")
-	return
 }
 
 func getSites() ([]collector.Site, error) {
