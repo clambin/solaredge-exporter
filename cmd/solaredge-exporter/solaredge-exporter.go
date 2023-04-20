@@ -70,9 +70,9 @@ func Main(_ *cobra.Command, _ []string) {
 func getSites() ([]collector.Site, error) {
 	c := solaredge.Client{
 		Token: viper.GetString("apikey"),
-		HTTPClient: &http.Client{Transport: httpclient.NewRoundTripper(httpclient.WithCache{
-			DefaultExpiry: 5 * time.Minute,
-		})},
+		HTTPClient: &http.Client{
+			Transport: httpclient.NewRoundTripper(httpclient.WithCache(httpclient.CacheTable{}, 5*time.Minute, 0)),
+		},
 	}
 
 	sites, err := c.GetSites(context.Background())
