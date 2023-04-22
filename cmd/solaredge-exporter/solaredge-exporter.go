@@ -71,7 +71,7 @@ func getSites() ([]collector.Site, error) {
 	c := solaredge.Client{
 		Token: viper.GetString("apikey"),
 		HTTPClient: &http.Client{
-			Transport: httpclient.NewRoundTripper(httpclient.WithCache(httpclient.CacheTable{}, 5*time.Minute, 0)),
+			Transport: httpclient.NewRoundTripper(httpclient.WithCache(httpclient.DefaultCacheTable, 5*time.Minute, 0)),
 		},
 	}
 
