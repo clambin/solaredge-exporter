@@ -3,7 +3,7 @@ module github.com/clambin/solaredge-exporter
 go 1.19
 
 require (
-	github.com/clambin/go-common/httpclient v0.4.2
+	github.com/clambin/go-common/httpclient v0.4.4
 	github.com/clambin/solaredge v1.0.1
 	github.com/prometheus/client_golang v1.15.0
 	github.com/spf13/cobra v1.7.0
@@ -15,7 +15,7 @@ require (
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/clambin/go-common/cache v0.1.1 // indirect
+	github.com/clambin/go-common/cache v0.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
