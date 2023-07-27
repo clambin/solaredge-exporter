@@ -3,7 +3,7 @@ module github.com/clambin/solaredge-exporter
 go 1.19
 
 require (
-	github.com/clambin/go-common/httpclient v0.5.1
+	github.com/clambin/go-common/httpclient v0.6.0
 	github.com/clambin/solaredge v1.0.1
 	github.com/prometheus/client_golang v1.16.0
 	github.com/spf13/cobra v1.7.0
