@@ -15,8 +15,7 @@ import (
 
 func TestCollector_Collect(t *testing.T) {
 	s := mocks.NewSite(t)
-	s.
-		On("GetPowerOverview", mock.AnythingOfType("*context.emptyCtx")).
+	s.EXPECT().GetPowerOverview(mock.Anything).
 		Return(solaredge.PowerOverview{
 			LastUpdateTime: solaredge.Time{},
 			LifeTimeData: struct {
@@ -49,11 +48,10 @@ func TestCollector_Collect(t *testing.T) {
 				Power: 3400,
 			},
 		}, nil)
-	s.On("GetID").Return(1)
+	s.EXPECT().GetID().Return(1)
 
 	i := mocks.NewInverter(t)
-	i.
-		On("GetTelemetry", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("time.Time"), mock.AnythingOfType("time.Time")).
+	i.EXPECT().GetTelemetry(mock.Anything, mock.AnythingOfType("time.Time"), mock.AnythingOfType("time.Time")).
 		Return([]solaredge.InverterTelemetry{
 			{
 				L1Data: struct {
@@ -114,8 +112,7 @@ solaredge_year_energy{site="1"} 1000
 
 func TestCollector_Collect_NoTelemetry(t *testing.T) {
 	s := mocks.NewSite(t)
-	s.
-		On("GetPowerOverview", mock.AnythingOfType("*context.emptyCtx")).
+	s.EXPECT().GetPowerOverview(mock.Anything).
 		Return(solaredge.PowerOverview{
 			LastUpdateTime: solaredge.Time{},
 			LifeTimeData: struct {
@@ -148,11 +145,10 @@ func TestCollector_Collect_NoTelemetry(t *testing.T) {
 				Power: 3400,
 			},
 		}, nil)
-	s.On("GetID").Return(1)
+	s.EXPECT().GetID().Return(1)
 
 	i := mocks.NewInverter(t)
-	i.
-		On("GetTelemetry", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("time.Time"), mock.AnythingOfType("time.Time")).
+	i.EXPECT().GetTelemetry(mock.Anything, mock.Anything, mock.AnythingOfType("time.Time")).
 		Return([]solaredge.InverterTelemetry{}, nil)
 
 	c := collector.Collector{
@@ -191,15 +187,11 @@ func TestCollector_Collect_Failure(t *testing.T) {
 	r := prometheus.NewPedanticRegistry()
 	r.MustRegister(&c)
 
-	s.
-		On("GetPowerOverview", mock.AnythingOfType("*context.emptyCtx")).
+	s.EXPECT().GetPowerOverview(mock.Anything).
 		Return(solaredge.PowerOverview{}, errors.New("error")).
 		Once()
-	s.
-		On("GetID").
-		Return(1)
-	i.
-		On("GetTelemetry", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("time.Time"), mock.AnythingOfType("time.Time")).
+	s.EXPECT().GetID().Return(1)
+	i.EXPECT().GetTelemetry(mock.Anything, mock.AnythingOfType("time.Time"), mock.AnythingOfType("time.Time")).
 		Return(nil, errors.New("error"))
 	_, err := r.Gather()
 	assert.Error(t, err)

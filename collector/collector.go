@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/clambin/solaredge"
 	"github.com/prometheus/client_golang/prometheus"
-	"golang.org/x/exp/slog"
+	"log/slog"
 	"strconv"
 	"time"
 )
@@ -72,14 +72,14 @@ type Collector struct {
 	Inverters map[int][]Inverter
 }
 
-//go:generate mockery --name Site
+//go:generate mockery --name Site --with-expecter=true
 type Site interface {
 	GetID() int
 	GetPowerOverview(ctx context.Context) (solaredge.PowerOverview, error)
 	GetInverters(ctx context.Context) ([]solaredge.Inverter, error)
 }
 
-//go:generate mockery --name Inverter
+//go:generate mockery --name Inverter --with-expecter=true
 type Inverter interface {
 	GetTelemetry(ctx context.Context, start time.Time, end time.Time) ([]solaredge.InverterTelemetry, error)
 }

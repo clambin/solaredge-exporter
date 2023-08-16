@@ -6,23 +6,23 @@ import (
 	"github.com/clambin/go-common/httpclient"
 	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/collector"
-	"github.com/clambin/solaredge-exporter/version"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"golang.org/x/exp/slog"
+	"log/slog"
 	"net/http"
 	"os"
 	"time"
 )
 
 var (
-	cmd = cobra.Command{
+	version = "change-me"
+	cmd     = cobra.Command{
 		Use:     "solaredge-exporter",
 		Short:   "exports SolarEdge metrics to Prometheus",
 		Run:     Main,
-		Version: version.BuildVersion,
+		Version: version,
 	}
 )
 
@@ -33,7 +33,7 @@ func main() {
 	}
 }
 
-func Main(_ *cobra.Command, _ []string) {
+func Main(cmd *cobra.Command, _ []string) {
 	if viper.GetBool("debug") {
 		opts := slog.HandlerOptions{Level: slog.LevelDebug}
 		slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &opts)))
@@ -51,7 +51,7 @@ func Main(_ *cobra.Command, _ []string) {
 		return
 	}
 
-	slog.Info("solaredge-exporter started", "version", version.BuildVersion)
+	slog.Info("solaredge-exporter started", "version", cmd.Version)
 
 	coll := collector.Collector{Sites: sites, Inverters: inverters}
 	if err := prometheus.Register(&coll); err != nil {
