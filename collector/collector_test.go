@@ -187,12 +187,11 @@ func TestCollector_Collect_Failure(t *testing.T) {
 	r := prometheus.NewPedanticRegistry()
 	r.MustRegister(&c)
 
-	s.EXPECT().GetPowerOverview(mock.Anything).
-		Return(solaredge.PowerOverview{}, errors.New("error")).
-		Once()
+	s.EXPECT().GetPowerOverview(mock.Anything).Return(solaredge.PowerOverview{}, errors.New("error"))
 	s.EXPECT().GetID().Return(1)
 	i.EXPECT().GetTelemetry(mock.Anything, mock.AnythingOfType("time.Time"), mock.AnythingOfType("time.Time")).
 		Return(nil, errors.New("error"))
+
 	_, err := r.Gather()
 	assert.Error(t, err)
 }

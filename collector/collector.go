@@ -72,14 +72,12 @@ type Collector struct {
 	Inverters map[int][]Inverter
 }
 
-//go:generate mockery --name Site --with-expecter=true
 type Site interface {
 	GetID() int
 	GetPowerOverview(ctx context.Context) (solaredge.PowerOverview, error)
 	GetInverters(ctx context.Context) ([]solaredge.Inverter, error)
 }
 
-//go:generate mockery --name Inverter --with-expecter=true
 type Inverter interface {
 	GetTelemetry(ctx context.Context, start time.Time, end time.Time) ([]solaredge.InverterTelemetry, error)
 }

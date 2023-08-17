@@ -1,0 +1,10 @@
+with-expecter: true
+outpkg: mocks
+mockname: "{{.InterfaceName}}"
+packages:
+  github.com/clambin/solaredge-exporter/collector:
+    interfaces:
+      Inverter:
+      Site:
+    config:
+      dir: collector/mocks
