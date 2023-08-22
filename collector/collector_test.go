@@ -18,35 +18,11 @@ func TestCollector_Collect(t *testing.T) {
 	s.EXPECT().GetPowerOverview(mock.Anything).
 		Return(solaredge.PowerOverview{
 			LastUpdateTime: solaredge.Time{},
-			LifeTimeData: struct {
-				Energy  float64 `json:"energy"`
-				Revenue float64 `json:"revenue"`
-			}{
-				Energy: 10000,
-			},
-			LastYearData: struct {
-				Energy  float64 `json:"energy"`
-				Revenue float64 `json:"revenue"`
-			}{
-				Energy: 1000,
-			},
-			LastMonthData: struct {
-				Energy  float64 `json:"energy"`
-				Revenue float64 `json:"revenue"`
-			}{
-				Energy: 100,
-			},
-			LastDayData: struct {
-				Energy  float64 `json:"energy"`
-				Revenue float64 `json:"revenue"`
-			}{
-				Energy: 10,
-			},
-			CurrentPower: struct {
-				Power float64 `json:"power"`
-			}{
-				Power: 3400,
-			},
+			LifeTimeData:   solaredge.EnergyOverview{Energy: 10000},
+			LastYearData:   solaredge.EnergyOverview{Energy: 1000},
+			LastMonthData:  solaredge.EnergyOverview{Energy: 100},
+			LastDayData:    solaredge.EnergyOverview{Energy: 10},
+			CurrentPower:   solaredge.CurrentPower{Power: 3400},
 		}, nil)
 	s.EXPECT().GetID().Return(1)
 
@@ -115,35 +91,11 @@ func TestCollector_Collect_NoTelemetry(t *testing.T) {
 	s.EXPECT().GetPowerOverview(mock.Anything).
 		Return(solaredge.PowerOverview{
 			LastUpdateTime: solaredge.Time{},
-			LifeTimeData: struct {
-				Energy  float64 `json:"energy"`
-				Revenue float64 `json:"revenue"`
-			}{
-				Energy: 10000,
-			},
-			LastYearData: struct {
-				Energy  float64 `json:"energy"`
-				Revenue float64 `json:"revenue"`
-			}{
-				Energy: 1000,
-			},
-			LastMonthData: struct {
-				Energy  float64 `json:"energy"`
-				Revenue float64 `json:"revenue"`
-			}{
-				Energy: 100,
-			},
-			LastDayData: struct {
-				Energy  float64 `json:"energy"`
-				Revenue float64 `json:"revenue"`
-			}{
-				Energy: 10,
-			},
-			CurrentPower: struct {
-				Power float64 `json:"power"`
-			}{
-				Power: 3400,
-			},
+			LifeTimeData:   solaredge.EnergyOverview{Energy: 10000},
+			LastYearData:   solaredge.EnergyOverview{Energy: 1000},
+			LastMonthData:  solaredge.EnergyOverview{Energy: 100},
+			LastDayData:    solaredge.EnergyOverview{Energy: 10},
+			CurrentPower:   solaredge.CurrentPower{Power: 3400},
 		}, nil)
 	s.EXPECT().GetID().Return(1)
 
