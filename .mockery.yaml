@@ -1,10 +1,10 @@
 with-expecter: true
-outpkg: mocks
+filename: "{{.InterfaceName}}.go"
+dir: "{{.InterfaceDir}}/mocks"
 mockname: "{{.InterfaceName}}"
+outpkg: "mocks"
 packages:
   github.com/clambin/solaredge-exporter/collector:
     interfaces:
       Inverter:
       Site:
-    config:
-      dir: collector/mocks
