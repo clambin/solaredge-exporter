@@ -4,7 +4,7 @@ dir: "{{.InterfaceDir}}/mocks"
 mockname: "{{.InterfaceName}}"
 outpkg: "mocks"
 packages:
-  github.com/clambin/solaredge-exporter/collector:
+  github.com/clambin/solaredge-exporter/internal/collector:
     interfaces:
       Inverter:
       Site:

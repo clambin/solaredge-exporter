@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/clambin/go-common/httpclient"
 	"github.com/clambin/solaredge"
-	"github.com/clambin/solaredge-exporter/collector"
+	"github.com/clambin/solaredge-exporter/internal/collector"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
