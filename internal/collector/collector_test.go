@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/internal/collector"
-	mocks2 "github.com/clambin/solaredge-exporter/internal/collector/mocks"
+	"github.com/clambin/solaredge-exporter/internal/collector/mocks"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/testutil"
 	"github.com/stretchr/testify/assert"
@@ -14,7 +14,7 @@ import (
 )
 
 func TestCollector_Collect(t *testing.T) {
-	s := mocks2.NewSite(t)
+	s := mocks.NewSite(t)
 	s.EXPECT().GetPowerOverview(mock.Anything).
 		Return(solaredge.PowerOverview{
 			LastUpdateTime: solaredge.Time{},
@@ -26,7 +26,7 @@ func TestCollector_Collect(t *testing.T) {
 		}, nil)
 	s.EXPECT().GetID().Return(1)
 
-	i := mocks2.NewInverter(t)
+	i := mocks.NewInverter(t)
 	i.EXPECT().GetTelemetry(mock.Anything, mock.AnythingOfType("time.Time"), mock.AnythingOfType("time.Time")).
 		Return([]solaredge.InverterTelemetry{
 			{
@@ -87,7 +87,7 @@ solaredge_year_energy{site="1"} 1000
 }
 
 func TestCollector_Collect_NoTelemetry(t *testing.T) {
-	s := mocks2.NewSite(t)
+	s := mocks.NewSite(t)
 	s.EXPECT().GetPowerOverview(mock.Anything).
 		Return(solaredge.PowerOverview{
 			LastUpdateTime: solaredge.Time{},
@@ -99,7 +99,7 @@ func TestCollector_Collect_NoTelemetry(t *testing.T) {
 		}, nil)
 	s.EXPECT().GetID().Return(1)
 
-	i := mocks2.NewInverter(t)
+	i := mocks.NewInverter(t)
 	i.EXPECT().GetTelemetry(mock.Anything, mock.Anything, mock.AnythingOfType("time.Time")).
 		Return([]solaredge.InverterTelemetry{}, nil)
 
@@ -130,8 +130,8 @@ solaredge_year_energy{site="1"} 1000
 }
 
 func TestCollector_Collect_Failure(t *testing.T) {
-	s := mocks2.NewSite(t)
-	i := mocks2.NewInverter(t)
+	s := mocks.NewSite(t)
+	i := mocks.NewInverter(t)
 	c := collector.Collector{
 		Sites:     []collector.Site{s},
 		Inverters: map[int][]collector.Inverter{1: {i}},
