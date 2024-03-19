@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"errors"
-	"github.com/clambin/go-common/httpclient"
+	"github.com/clambin/go-common/http/roundtripper"
 	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/internal/collector"
 	"github.com/prometheus/client_golang/prometheus"
@@ -39,7 +39,18 @@ func Main(cmd *cobra.Command, _ []string) {
 		slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &opts)))
 	}
 
-	sites, err := getSites()
+	metrics := roundtripper.NewDefaultRoundTripMetrics("solaredge", "exporter", "")
+	prometheus.MustRegister(metrics)
+
+	httpClient := http.Client{
+		Transport: roundtripper.New(
+			roundtripper.WithCache(roundtripper.DefaultCacheTable, 5*time.Minute, 0),
+			roundtripper.WithInstrumentedRoundTripper(metrics),
+		),
+		Timeout: 10 * time.Second,
+	}
+
+	sites, err := getSites(&httpClient)
 	if err != nil {
 		slog.Error("failed to get SolarEdge sites", "err", err)
 		return
@@ -67,12 +78,10 @@ func Main(cmd *cobra.Command, _ []string) {
 	slog.Info("solaredge-exporter stopped")
 }
 
-func getSites() ([]collector.Site, error) {
+func getSites(httpClient *http.Client) ([]collector.Site, error) {
 	c := solaredge.Client{
-		Token: viper.GetString("apikey"),
-		HTTPClient: &http.Client{
-			Transport: httpclient.NewRoundTripper(httpclient.WithCache(httpclient.DefaultCacheTable, 5*time.Minute, 0)),
-		},
+		Token:      viper.GetString("apikey"),
+		HTTPClient: httpClient,
 	}
 
 	sites, err := c.GetSites(context.Background())

@@ -1,0 +1,38 @@
+apiVersion: k8s.kevingomez.fr/v1
+kind: GrafanaDashboard
+metadata:
+    annotations:
+        dark/folder: Home Automation
+    name: solaredge-internal
+    namespace: development
+spec:
+    title: Solar Panels - Internal
+    tags: [generated,yaml]
+    auto_refresh: 30s
+    time:
+        - now-6h
+        - now
+    timezone: browser
+    rows:
+        - name: Overview
+          panels:
+            - timeseries:
+                title: request rate
+                span: 6
+                targets:
+                    - prometheus:
+                        query: sum by (code) (rate(solaredge_exporter_http_requests_total[$__rate_interval]))
+                        legend: "{{code}}"
+                legend: [as_list, to_bottom]
+                axis:
+                    unit: reqps
+            - timeseries:
+                title: latency
+                span: 6
+                targets:
+                    - prometheus:
+                        query: avg by (code) (solaredge_exporter_http_request_duration_seconds_sum / solaredge_exporter_http_request_duration_seconds_count)
+                        legend: "{{code}}"
+                legend: [as_list, to_bottom]
+                axis:
+                    unit: s
