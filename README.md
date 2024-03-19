@@ -1,9 +1,9 @@
 # solaredge-exporter
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/clambin/solaredge-exporter?color=green&label=Release&style=plastic)
-![Codecov](https://img.shields.io/codecov/c/gh/clambin/solaredge-exporter?style=plastic)
-![Build](https://github.com/clambin/solaredge-exporter/workflows/Build/badge.svg)
-![Go Report Card](https://goreportcard.com/badge/github.com/clambin/solaredge-exporter)
-![GitHub](https://img.shields.io/github/license/clambin/solaredge-exporter?style=plastic)
+[![release](https://img.shields.io/github/v/tag/clambin/solaredge-exporter?color=green&label=release&style=plastic)](https://github.com/clambin/solaredge-exporter/releases)
+[![codecov](https://img.shields.io/codecov/c/gh/clambin/solaredge-exporter?style=plastic)](https://app.codecov.io/gh/clambin/solaredge-exporter)
+[![build](https://github.com/clambin/solaredge-exporter/actions/workflows/build.yaml/badge.svg)](https://github.com/clambin/solaredge-exporter/actions)
+[![go report card](https://goreportcard.com/badge/github.com/clambin/solaredge-exporter)](https://goreportcard.com/report/github.com/clambin/solaredge-exporter)
+[![license](https://img.shields.io/github/license/clambin/solaredge-exporter?style=plastic)](LICENSE.md)
 
 Basic Prometheus exporter for SolarEdge power inverters.
 
@@ -32,45 +32,14 @@ where apikey is your SolarEdge API key.
 
 ## Prometheus metrics
 
-Currently, the exporter provides the following metrics:
-
-```
-# HELP solaredge_current_power Current Power in Watt
-## TYPE solaredge_current_power gauge
-solaredge_current_power{site="1"} 3400
-
-# HELP solaredge_day_energy Today's produced energy in WattHours
-# TYPE solaredge_day_energy gauge
-solaredge_day_energy{site="1"} 10
-
-# HELP solaredge_inverter_ac_current AC current reported by the inverter(s)
-# TYPE solaredge_inverter_ac_current gauge
-solaredge_inverter_ac_current{site="1"} 15
-
-# HELP solaredge_inverter_ac_voltage AC voltage reported by the inverter(s)
-# TYPE solaredge_inverter_ac_voltage gauge
-solaredge_inverter_ac_voltage{site="1"} 220
-
-# HELP solaredge_inverter_dc_voltage DC voltage reported by the inverter(s)
-# TYPE solaredge_inverter_dc_voltage gauge
-solaredge_inverter_dc_voltage{site="1"} 300
-
-# HELP solaredge_inverter_power_limit Power limit reported by the inverter(s)
-# TYPE solaredge_inverter_power_limit gauge
-solaredge_inverter_power_limit{site="1"} 100
-
-# HELP solaredge_inverter_temperature Temperature reported by the inverter(s)
-# TYPE solaredge_inverter_temperature gauge
-solaredge_inverter_temperature{site="1"} 25
-
-# HELP solaredge_month_energy This month's produced energy in WattHours
-# TYPE solaredge_month_energy gauge
-solaredge_month_energy{site="1"} 100
-
-# HELP solaredge_year_energy This year's produced energy in WattHours
-# TYPE solaredge_year_energy gauge
-solaredge_year_energy{site="1"} 1000
-```
+| metric | type |  labels | help |
+| --- | --- |  --- | --- |
+| solaredge_current_power | GAUGE | site|Current Power in Watt |
+| solaredge_day_energy | GAUGE | site|Today's produced energy in WattHours |
+| solaredge_exporter_http_request_duration_seconds | SUMMARY | code, method, path|http request duration in seconds |
+| solaredge_exporter_http_requests_total | COUNTER | code, method, path|total number of http requests |
+| solaredge_month_energy | GAUGE | site|This month's produced energy in WattHours |
+| solaredge_year_energy | GAUGE | site|This year's produced energy in WattHours |
 
 ## Authors
 
