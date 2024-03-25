@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/clambin/go-common/http/metrics"
 	"github.com/clambin/go-common/http/roundtripper"
 	"github.com/clambin/solaredge"
 	"github.com/clambin/solaredge-exporter/internal/collector"
@@ -39,13 +40,13 @@ func Main(cmd *cobra.Command, _ []string) {
 		slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &opts)))
 	}
 
-	metrics := roundtripper.NewDefaultRoundTripMetrics("solaredge", "exporter", "")
-	prometheus.MustRegister(metrics)
+	m := metrics.NewRequestSummaryMetrics("solaredge", "exporter", nil)
+	prometheus.MustRegister(m)
 
 	httpClient := http.Client{
 		Transport: roundtripper.New(
 			roundtripper.WithCache(roundtripper.DefaultCacheTable, 5*time.Minute, 0),
-			roundtripper.WithInstrumentedRoundTripper(metrics),
+			roundtripper.WithRequestMetrics(m),
 		),
 		Timeout: 10 * time.Second,
 	}
